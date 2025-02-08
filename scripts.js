@@ -1,8 +1,7 @@
-
 const loadingCircle = document.getElementById('loadingCircle');
 const gifPopup = document.getElementById('gifPopup');
 const popupGif = document.getElementById('popupGif');
-const closeButton = document.getElementById('closeButton'); // 元からある×ボタン
+const closeButton = document.getElementById('popupCloseButton'); // ポップアップの×ボタン
 const markerStatus = document.getElementById('markerStatus');
 const markerBoundary = document.getElementById('markerBoundary');
 
@@ -80,54 +79,22 @@ function showPopupGif(gifPathsArray) {
     playGif(currentGifIndex);
 }
 
-// **修正**: 最初からある×ボタンでポップアップを閉じる
+// ポップアップ閉じる
 closeButton.addEventListener('click', () => {
     gifPopup.style.display = 'none';
     isPlaying = false;
-    markerBoundary.style.display = 'block';
-    updateMarkerStatus(true, false);  // マーカー未検出の状態に戻す
+    currentGifIndex = 0;
+    markerBoundary.style.display = 'block'; // ポップアップが閉じられたら枠を再表示
 });
 
-// ボタン1（tb）を押すと切り替え
+// ボタン1の動作
 button1.addEventListener('click', () => {
-    currentGifIndex = 0; // tb
-    popupGif.src = gifPathsArray[currentGifIndex];
+    const markerId = "city1"; // ここで対象マーカーIDを指定
+    showPopupGif(gifPaths[markerId]);
 });
 
-// ボタン2（t）を押すと切り替え
+// ボタン2の動作
 button2.addEventListener('click', () => {
-    currentGifIndex = 1; // t
-    popupGif.src = gifPathsArray[currentGifIndex];
-});
-
-// マーカー検出処理
-document.querySelectorAll('a-marker').forEach(marker => {
-    marker.addEventListener('markerFound', () => {
-        if (isPlaying) return;
-        updateMarkerStatus(true, true);
-
-        const markerId = marker.id;
-        if (gifPaths[markerId]) {
-            setTimeout(() => {
-                showPopupGif(gifPaths[markerId]);
-            }, 1000);
-        }
-    });
-
-    marker.addEventListener('markerLost', () => {
-        if (!isPlaying) {
-            markerBoundary.style.display = 'block';
-            updateMarkerStatus(true, false);
-        }
-    });
-});
-
-// GIFを事前に読み込む
-window.addEventListener('load', () => {
-    Object.values(gifPaths).forEach(paths => {
-        paths.forEach(path => {
-            const img = new Image();
-            img.src = path;
-        });
-    });
+    const markerId = "city2"; // ここで対象マーカーIDを指定
+    showPopupGif(gifPaths[markerId]);
 });

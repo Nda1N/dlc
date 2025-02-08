@@ -11,29 +11,31 @@
 </head>
 <body>
 
+    <!-- ローディング中の表示 -->
     <div id="loadingCircle">ローディング中...</div>
 
+    <!-- GIFポップアップ -->
     <div id="gifPopup">
+        <button id="popupCloseButton" class="closeButton">×</button>
         <img id="popupGif" />
-        <div id="closeButton">✖︎</div> <!-- 閉じるボタン -->
     </div>
 
+    <!-- マーカー状態表示 -->
     <div id="markerStatus">マーカーが見つかりません</div>
 
+    <!-- マーカー境界 -->
     <div id="markerBoundary"></div>
 
-    <!-- ボタンと閉じるボタン -->
-   <div id="controls">
-    <button id="closeButton">✖︎</button> <!-- 閉じるボタン -->
-    <div id="switchButtons">
-        <button id="button1" class="switchButton red">①</button>
-        <button id="button2" class="switchButton blue">②</button>
+    <!-- コントロールボタン -->
+    <div id="controls">
+        <div id="switchButtons">
+            <button id="button1" class="switchButton red">①</button>
+            <button id="button2" class="switchButton blue">②</button>
+        </div>
     </div>
-</div>
-
 
     <a-scene embedded arjs>
-         <!-- City Markers -->
+        <!-- City Markers -->
         <a-marker id="city1" type="pattern" url="markers/city1.patt"></a-marker>
         <a-marker id="city2" type="pattern" url="markers/city2.patt"></a-marker>
         <a-marker id="city3" type="pattern" url="markers/city3.patt"></a-marker>
@@ -56,6 +58,7 @@
         <a-marker id="ocean2" type="pattern" url="markers/ocean2.patt"></a-marker>
         <a-marker id="ocean3" type="pattern" url="markers/ocean3.patt"></a-marker>
         <a-marker id="ocean4" type="pattern" url="markers/ocean4.patt"></a-marker>
+        
         <a-entity camera></a-entity>
     </a-scene>
 
