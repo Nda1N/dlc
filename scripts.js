@@ -1,7 +1,7 @@
 const loadingCircle = document.getElementById('loadingCircle');
 const gifPopup = document.getElementById('gifPopup');
 const popupGif = document.getElementById('popupGif');
-const closeButton = document.getElementById('popupCloseButton'); // ポップアップの×ボタン
+const closeButton = document.getElementById('popupCloseButton');
 const markerStatus = document.getElementById('markerStatus');
 const markerBoundary = document.getElementById('markerBoundary');
 
@@ -18,15 +18,7 @@ const gifPaths = {
     grass1: ['giraffe_tb.gif', 'giraffe_t.gif'],
     grass2: ['meerkat_tb.gif', 'meerkat_t.gif'],
     grass3: ['horse_tb.gif', 'horse_t.gif'],
-    grass4: ['kangaroo_tb.gif', 'kangaroo_t.gif'],
-    jungle1: ['gibbon_tb.gif', 'gibbon_t.gif'],
-    jungle2: ['bear_tb.gif', 'bear_t.gif'],
-    jungle3: ['ezorisu_tb.gif', 'ezorisu_t.gif'],
-    jungle4: ['deer_tb.gif', 'deer_t.gif'],
-    ocean1: ['penguin_tb.gif', 'penguin_t.gif'],
-    ocean2: ['seal_tb.gif', 'seal_t.gif'],
-    ocean3: ['seaotter_tb.gif', 'seaotter_t.gif'],
-    ocean4: ['seaturtle_tb.gif', 'seaturtle_t.gif']
+    grass4: ['kangaroo_tb.gif', 'kangaroo_t.gif']
 };
 
 let isPlaying = false;
@@ -48,6 +40,18 @@ function updateMarkerStatus(show, isMarkerFound = false) {
         markerStatus.style.display = "none";
     }
 }
+
+// マーカーが検出されたかどうか
+const scene = document.querySelector('a-scene');
+scene.addEventListener('markerFound', (e) => {
+    const markerId = e.target.id;
+    updateMarkerStatus(true, true);
+    showPopupGif(gifPaths[markerId]);
+});
+
+scene.addEventListener('markerLost', () => {
+    updateMarkerStatus(true, false);
+});
 
 // GIFの表示
 function showPopupGif(gifPathsArray) {
