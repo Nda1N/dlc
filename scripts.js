@@ -1,13 +1,16 @@
+
 const loadingCircle = document.getElementById('loadingCircle');
 const gifPopup = document.getElementById('gifPopup');
 const popupGif = document.getElementById('popupGif');
-const closeButton = document.getElementById('closeButton'); 
+const closeButton = document.getElementById('closeButton'); // 元からある×ボタン
 const markerStatus = document.getElementById('markerStatus');
 const markerBoundary = document.getElementById('markerBoundary');
 
+// ボタン1とボタン2
 const button1 = document.getElementById('button1');
 const button2 = document.getElementById('button2');
 
+// GIFのパス
 const gifPaths = {
     city1: ['human_tb.gif', 'human_t.gif'],
     city2: ['dog_tb.gif', 'dog_t.gif'],
@@ -27,31 +30,104 @@ const gifPaths = {
     ocean4: ['seaturtle_tb.gif', 'seaturtle_t.gif']
 };
 
+let isPlaying = false;
 let currentGifIndex = 0;
 
+function updateMarkerStatus(show, isMarkerFound = false) {
+    if (isPlaying) return;
+
+    if (show) {
+        if (isMarkerFound) {
+            markerStatus.innerText = "マーカーを検出中...";
+            markerStatus.style.color = "green";
+        } else {
+            markerStatus.innerText = "マーカーが見つかりません";
+            markerStatus.style.color = "red";
+        }
+        markerStatus.style.display = "block";
+    } else {
+        markerStatus.style.display = "none";
+    }
+}
+
+// GIFの表示
 function showPopupGif(gifPathsArray) {
+    if (isPlaying) return;
+
+    isPlaying = true;
+    currentGifIndex = 0;
+    const gif = popupGif;
+
+    function playGif(index) {
+        gif.src = gifPathsArray[index];
+        markerBoundary.style.display = 'none';  // ポップアップ中にマーカー枠を隠す
+    }
+
     loadingCircle.style.display = 'block';
     gifPopup.style.display = 'none';
 
-    popupGif.onload = () => {
+    gif.onload = () => {
         loadingCircle.style.display = 'none';
         gifPopup.style.display = 'block';
     };
 
-    popupGif.src = gifPathsArray[currentGifIndex];
+    gif.onerror = () => {
+        setTimeout(() => {
+            playGif(currentGifIndex);
+        }, 500);
+    };
+
+    playGif(currentGifIndex);
 }
 
+// **修正**: 最初からある×ボタンでポップアップを閉じる
 closeButton.addEventListener('click', () => {
     gifPopup.style.display = 'none';
+    isPlaying = false;
     markerBoundary.style.display = 'block';
+    updateMarkerStatus(true, false);  // マーカー未検出の状態に戻す
 });
 
+// ボタン1（tb）を押すと切り替え
 button1.addEventListener('click', () => {
-    currentGifIndex = 0;
+    currentGifIndex = 0; // tb
     popupGif.src = gifPathsArray[currentGifIndex];
 });
 
+// ボタン2（t）を押すと切り替え
 button2.addEventListener('click', () => {
-    currentGifIndex = 1;
+    currentGifIndex = 1; // t
     popupGif.src = gifPathsArray[currentGifIndex];
+});
+
+// マーカー検出処理
+document.querySelectorAll('a-marker').forEach(marker => {
+    marker.addEventListener('markerFound', () => {
+        if (isPlaying) return;
+        updateMarkerStatus(true, true);
+
+        const markerId = marker.id;
+        if (gifPaths[markerId]) {
+            setTimeout(() => {
+                showPopupGif(gifPaths[markerId]);
+            }, 1000);
+        }
+    });
+
+    marker.addEventListener('markerLost', () => {
+        if (!isPlaying) {
+            markerBoundary.style.display = 'block';
+            updateMarkerStatus(true, false);
+        }
+    });
+});
+
+// GIFを事前に読み込む
+window.addEventListener('load', () => {
+    Object.values(gifPaths).forEach(paths => {
+        paths.forEach(path => {
+            const img = new Image();
+            img.src = path;
+        });
+    });
 });
