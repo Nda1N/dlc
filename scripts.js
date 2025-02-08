@@ -78,18 +78,6 @@ function showPopupGif(gifPathsArray) {
 
     playGif(currentGifIndex);
 
-    // ボタン1（tb）を押すと切り替え
-    button1.addEventListener('click', () => {
-        currentGifIndex = 0; // tb
-        playGif(currentGifIndex);
-    });
-
-    // ボタン2（t）を押すと切り替え
-    button2.addEventListener('click', () => {
-        currentGifIndex = 1; // t
-        playGif(currentGifIndex);
-    });
-
     // 最初から配置されている×ボタンのクリックイベント
     closeButton.addEventListener('click', () => {
         gifPopup.style.display = 'none';
